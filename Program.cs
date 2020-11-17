@@ -1,31 +1,73 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Configuration;
+using System.IO;
+using System.Reflection;
 using System.ServiceProcess;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace HttpPrint
 {
     static class Program
     {
+        public static Configuration config;
+        public static readonly string LogFile = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "PrintService.log");
+        public static FileStream stream;
+        public static StreamWriter logWriter;
         /// <summary>
         /// 应用程序的主入口点。
         /// </summary>
-        static void Main()
+        public static void Main()
         {
-            ServiceBase[] ServicesToRun;
-            ServicesToRun = new ServiceBase[]
+            if (!File.Exists(LogFile)) File.Create(LogFile);
+            stream = new FileStream(LogFile, FileMode.Open, FileAccess.Write, FileShare.Read);
+            stream.Seek(0, SeekOrigin.End);
+            logWriter = new StreamWriter(stream);
+            try
             {
-                new PrintService()
-            };
-            ServiceBase.Run(ServicesToRun);
-            /*new PrintService().Start();
-            while (true)
+                var assembly = Assembly.GetExecutingAssembly();
+                var fileMap = new ExeConfigurationFileMap()
+                {
+                    ExeConfigFilename = $"{assembly.Location}.config",
+                    LocalUserConfigFilename = $"{assembly.Location}.config"
+                };
+                config = ConfigurationManager.OpenMappedExeConfiguration(fileMap, ConfigurationUserLevel.None);
+                var service = new PrintService();
+                var ServicesToRun = new ServiceBase[]
+                {
+                     service
+                };
+                //ServiceBase.Run(ServicesToRun);
+                service.Start();
+                while (true)
+                {
+                    Thread.Sleep(1000);
+                }
+            }
+            catch (Exception ex)
             {
-                Thread.Sleep(1000);
-            }*/
+
+            }
+            finally
+            {
+                logWriter.Close();
+                stream.Close();
+            }
+        }
+        public static void writeLog(string message, Exception ex = null)
+        {
+            var size = Int32.Parse(config.ReadKey("log_size") ?? "2097152");
+            if (stream.Length > size)
+            {
+                stream.Seek(0, SeekOrigin.Begin);
+                stream.SetLength(0);
+            }
+            logWriter.WriteLine($"{DateTime.Now}: {message} \r\n{ (ex == null ? "" : $"Exception: {ex}") }\r\n");
+            logWriter.Flush();
+
+        }
+        public static string ReadKey(this Configuration config, string key)
+        {
+            return config.AppSettings.Settings[key]?.Value;
         }
     }
 }

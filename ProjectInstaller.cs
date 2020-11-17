@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Configuration.Install;
 using System.Linq;
+using System.ServiceProcess;
 using System.Threading.Tasks;
 
 namespace HttpPrint
@@ -29,6 +30,16 @@ namespace HttpPrint
         private void serviceProcessInstaller1_AfterInstall(object sender, InstallEventArgs e)
         {
 
+        }
+        public override void Commit(IDictionary savedState)
+        {
+            base.Commit(savedState);
+
+            ServiceController sc = new ServiceController("PrintService");
+            if (sc.Status.Equals(ServiceControllerStatus.Stopped))
+            {
+                sc.Start();
+            }
         }
     }
 }

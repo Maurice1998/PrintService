@@ -29,7 +29,7 @@
         private void InitializeComponent()
         {
             this.serviceProcessInstaller1 = new System.ServiceProcess.ServiceProcessInstaller();
-            this.serviceInstaller2 = new System.ServiceProcess.ServiceInstaller();
+            this.serviceInstaller1 = new System.ServiceProcess.ServiceInstaller();
             // 
             // serviceProcessInstaller1
             // 
@@ -38,24 +38,25 @@
             this.serviceProcessInstaller1.Username = null;
             this.serviceProcessInstaller1.AfterInstall += new System.Configuration.Install.InstallEventHandler(this.serviceProcessInstaller1_AfterInstall);
             // 
-            // serviceInstaller2
+            // serviceInstaller1
             // 
-            this.serviceInstaller2.DisplayName = "PrintService";
-            this.serviceInstaller2.ServiceName = "Service1";
-            this.serviceInstaller2.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
-            this.serviceInstaller2.AfterInstall += new System.Configuration.Install.InstallEventHandler(this.serviceInstaller2_AfterInstall);
+            this.serviceInstaller1.Description = "用来监测特殊固定端口的Http请求，向其返回打印机的状态、本机的属性等信息，根据一定的post请求信息调用打印机打印特定格式的标签。";
+            this.serviceInstaller1.DisplayName = "PrintService";
+            this.serviceInstaller1.ServiceName = "PrintService";
+            this.serviceInstaller1.StartType = System.ServiceProcess.ServiceStartMode.Automatic;
+            this.serviceInstaller1.AfterInstall += new System.Configuration.Install.InstallEventHandler(this.serviceInstaller2_AfterInstall);
             // 
             // ProjectInstaller
             // 
             this.Installers.AddRange(new System.Configuration.Install.Installer[] {
             this.serviceProcessInstaller1,
-            this.serviceInstaller2});
+            this.serviceInstaller1});
 
         }
 
         #endregion
 
         private System.ServiceProcess.ServiceProcessInstaller serviceProcessInstaller1;
-        private System.ServiceProcess.ServiceInstaller serviceInstaller2;
+        private System.ServiceProcess.ServiceInstaller serviceInstaller1;
     }
 }
