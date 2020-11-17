@@ -157,7 +157,7 @@ namespace HttpPrint
         }
         public void print(string data)
         {
-            ///process data to print?
+            //process data to print?
             var task = JsonConvert.DeserializeObject<PrintJobModel>(data);
             if (task == null)
             {
@@ -202,7 +202,7 @@ namespace HttpPrint
             }
             Program.writeLog(task.data);
         }
-      
+
         //Carton Label Print
         /*public void print1()
         {
@@ -223,25 +223,24 @@ namespace HttpPrint
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-       /* private void BinLabelDocument_PrintPage(object sender, System.Drawing.Printing.PrintPageEventArgs e)
-        {*//*
-            如果需要改变 可以在new Font(new FontFamily("Arial"), 11）中的“Arial”改成自己要的字体就行了，黑体 后面的数字代表字体的大小
-             System.Drawing.Brushes.Blue, 170, 10 中的 System.Drawing.Brushes.Blue 为颜色，后面的为输出的位置*//*
-            var jObject = JObject.Parse(postMsg);
-            var str = jObject["data"].ToString();
-            var labObject = JObject.Parse(str);
-            var array = labObject["usn_list"] as JArray;
-            EncodingOptions encodeOption = new EncodingOptions();
-            encodeOption.Height = 13;
+        /*private void BinLabelDocument_PrintPage(object sender, System.Drawing.Printing.PrintPageEventArgs e)
+         {
+            
+        var jObject = JObject.Parse(postMsg);
+        var str = jObject["data"].ToString();
+        var labObject = JObject.Parse(str);
+        var array = labObject["usn_list"] as JArray;
+        EncodingOptions encodeOption = new EncodingOptions();
+        encodeOption.Height = 13;
             encodeOption.Width = 200;
             encodeOption.PureBarcode = true;
             ZXing.BarcodeWriter wr = new ZXing.BarcodeWriter();
-            wr.Options = encodeOption;
+        wr.Options = encodeOption;
             wr.Format = ZXing.BarcodeFormat.CODE_128;
-            *//*var code = "L2014021700000008";*//*
-            Bitmap img = wr.Write(array[""].ToString());
+            var code = "L2014021700000008";
+        Bitmap img = wr.Write(array[""].ToString());
 
-            e.Graphics.DrawString("CartonID: "+labObject["bin_code"].ToString(), new Font(new FontFamily("Arial"), 10f, FontStyle.Bold), Brushes.Black, 10, 0);
+        e.Graphics.DrawString("CartonID: "+labObject["bin_code"].ToString(), new Font(new FontFamily("Arial"), 10f, FontStyle.Bold), Brushes.Black, 10, 0);
             e.Graphics.DrawImage(img, 9, 20);
             e.Graphics.DrawString("Print time: " + DateTime.Now.ToString(), new Font(new FontFamily("Arial"), 10f), Brushes.Black, 10, 35);
             e.Graphics.DrawLine(Pens.Black, 10, 50, 220, 50);
@@ -255,13 +254,13 @@ namespace HttpPrint
             e.Graphics.DrawLine(Pens.Black, 10, 144, 220, 144);
             e.HasMorePages = false;
         }*/
-        /// <summary>
-        /// 设置PrintDocument 的相关属性
-        /// </summary>
-        /// <param name="str">要打印的字符串</param>
+    /// <summary>
+    /// 设置PrintDocument 的相关属性
+    /// </summary>
+    /// <param name="str">要打印的字符串</param>
 
-        //Pallet Label Print Paper A5
-        public void print2()
+    //Pallet Label Print Paper A5
+    public void print2()
         {
             var doc = new PrintDocument();
             //调用的打印机
